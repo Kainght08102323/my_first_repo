@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>LINE自動送信 - 長畑海</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .message-option {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LINE自動送信 - 長畑海</h1>
+        <p>送信したいメッセージを選択してください:</p>
+        <div class="message-option">
+            <input type="radio" id="option1" name="message" value="おはようございます！今日も一日頑張りましょう。">
+            <label for="option1">おはようメッセージ</label>
+        </div>
+        <div class="message-option">
+            <input type="radio" id="option2" name="message" value="こんにちは！お元気ですか？">
+            <label for="option2">こんにちはメッセージ</label>
+        </div>
+        <div class="message-option">
+            <input type="radio" id="option3" name="message" value="こんばんは！今日もお疲れ様でした。">
+            <label for="option3">こんばんはメッセージ</label>
+        </div>
+        <button onclick="sendMessage()">送信</button>
+        <p id="status"></p>
+    </div>
+    <script>
+        function sendMessage() {
+            const selectedMessage = document.querySelector('input[name="message"]:checked').value;
+            const statusElement = document.getElementById('status');
+
+            const request = new XMLHttpRequest();
+            request.open("POST", "https://api.line.me/v2/bot/message/push", true);
+            request.setRequestHeader("Content-Type", "application/json");
+            request.setRequestHeader("Authorization", "Bearer fnI4W8YHGpHg2XEuRXLyy7TkasFDHEtPXR6G/b4BVi7bIC1l1TL0EpxzHn91SW29uiD+zT0otK4a9BOOpHs1FyRKDUwCTIMPeN6M01MCDtJsV3ERiXbhARFao21nMs1vdNaoBmlyrJmoJmwf/Hf/FwdB04t89/1O/w1cDnyilFU=");
+
+            const messageData = {
+                to: "kaaai08102323",
+                messages: [
+                    {
+                        type: "text",
+                        text: selectedMessage
+                    }
+                ]
+            };
+
+            request.onreadystatechange = function() {
+                if (request.readyState === 4 && request.status === 200) {
+                    statusElement.textContent = "メッセージが送信されました!";
+                } else if (request.readyState === 4) {
+                    statusElement.textContent = "送信に失敗しました: " + request.status;
+                }
+            };
+
+            request.send(JSON.stringify(messageData));
+        }
+    </script>
+</body>
+</html>
